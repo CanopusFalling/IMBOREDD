@@ -1,0 +1,13 @@
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.csprojAssemblyReference.cache
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.csproj.CoreCompileInputs.cache
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.AssemblyInfoInputs.cache
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.AssemblyInfo.cs
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\bin\Debug\netcoreapp3.1\B-Bee_House_Perimeter.exe
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\bin\Debug\netcoreapp3.1\B-Bee_House_Perimeter.deps.json
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\bin\Debug\netcoreapp3.1\B-Bee_House_Perimeter.runtimeconfig.json
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\bin\Debug\netcoreapp3.1\B-Bee_House_Perimeter.runtimeconfig.dev.json
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\bin\Debug\netcoreapp3.1\B-Bee_House_Perimeter.dll
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\bin\Debug\netcoreapp3.1\B-Bee_House_Perimeter.pdb
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.dll
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.pdb
+C:\Users\kent_\Documents\github\IMBOREDD\B-Bee_House_Perimeter\obj\Debug\netcoreapp3.1\B-Bee_House_Perimeter.genruntimeconfig.cache
