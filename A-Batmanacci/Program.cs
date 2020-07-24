@@ -17,26 +17,8 @@ namespace A_Batmanacci
                 Console.WriteLine(item);
             }*/
 
-            String[] testData = getBatmanacci(1, 20);
-            for (int i = 0; i < testData.Length; i++)
-            {
-                String testString = testData[i];
-                Char[] testChars = testString.ToCharArray();
-                for (int j = 0; j < testChars.Length; j++)
-                {
-                    Char currentChar = testChars[j];
-                    Char comparisonChar = getBatmanacciCharAt(i+1, j+1);
-
-                    if(currentChar != comparisonChar){
-                        Console.WriteLine(i + " : " + j + " : " + currentChar + " : " + comparisonChar);
-                    }else{
-                        Console.Write('-');
-                    }
-                }
-            }
-
             // Get user input.
-            int[] numbers = getNumbers();
+            BigInteger[] numbers = getNumbers();
 
             // Find letter at position specified.
             Console.WriteLine(getBatmanacciCharAt(numbers[0], numbers[1]));
@@ -44,12 +26,11 @@ namespace A_Batmanacci
 
         // ===== Find Char in Batmanacci =====
         // Find a spesific char in a spesific term in the batmanacci sequence.
-        static char getBatmanacciCharAt(int term, int charPos)
+        static char getBatmanacciCharAt(BigInteger startTerm, BigInteger charPos)
         {
             // Get the terms needed from the fibonacci sequence.
-            BigInteger[] fibonacciTerms = fibonacci(term);
-            // Convert charPosition to a big integer.
-            BigInteger charPosition = new BigInteger(charPos);
+            int term = (int)startTerm;
+            BigInteger[] fibonacciTerms = fibonacci(term-2);
 
             // Ajust term so it's now an index.
             term += -1;
@@ -60,15 +41,16 @@ namespace A_Batmanacci
                 // Console.WriteLine(term + " : " + charPosition);
 
                 BigInteger term2Below = fibonacciTerms[term - 2];
+                
 
                 // Check if the char is in the term 2 below or the term 1 below.
-                if (charPosition <= term2Below)
+                if (charPos <= term2Below)
                 {
                     term += -2;
                 }
                 else
                 {
-                    charPosition = BigInteger.Subtract(charPosition, term2Below);
+                    charPos = BigInteger.Subtract(charPos, term2Below);
                     term += -1;
                 }
             }
@@ -119,7 +101,7 @@ namespace A_Batmanacci
 
         // ===== Fibonacci Calculations =====
         // Find all the terms up to the nth Fibonacci term.
-        static BigInteger[] fibonacci(int n)
+        static BigInteger[] fibonacci(BigInteger n)
         {
             // Sequence list.
             List<BigInteger> sequence = new List<BigInteger>();
@@ -163,12 +145,12 @@ namespace A_Batmanacci
         }
 
         // Get the user input and split it into 2 numbers.
-        static int[] getNumbers()
+        static BigInteger[] getNumbers()
         {
             String rawInput = Console.ReadLine();
             String[] separatedStrings = rawInput.Split(' ');
 
-            int[] result = new int[2];
+            BigInteger[] result = new BigInteger[2];
 
             // Catch argument count problems.
             if (separatedStrings.Length != 2)
@@ -176,13 +158,10 @@ namespace A_Batmanacci
                 throw new Exception("Expected 2 arguments, found " + separatedStrings.Length + ".");
             }
 
+            // Parse the numbers as big boi integers.
             for (int i = 0; i < result.Length; i++)
             {
-                /*bool success = */int.TryParse(separatedStrings[i], out result[i]);
-                /*if (!success)
-                {
-                    throw new Exception("Invalid argument at position: " + separatedStrings.Length + ".");
-                }*/
+                result[i] = BigInteger.Parse(separatedStrings[i]);
             }
 
             return result;
