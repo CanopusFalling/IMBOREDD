@@ -8,7 +8,20 @@ namespace B_Bee_House_Perimeter
     {
         static void Main(string[] args)
         {
+            // Set the console to use UTF8 (8-bit unicode.)
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            // Get the user input for the size of the graph and the number of occupied houses.
+            int[] firstInput;
+            int edgeLength = firstInput[0];
+            int nodeCount = firstInput[1];
+
             HexTessGraph graph = new HexTessGraph(9);
+        }
+
+        // ===== User Input =====
+        private static int[] getIntegersInput(){
+            Console.ReadLine("");
         }
     }
 
@@ -26,6 +39,9 @@ namespace B_Bee_House_Perimeter
             // Add all the nodes.
             addSetupNodes(edgeLength);
         }
+        
+        // ===== Setter Functions =====
+
 
         // ===== Graph Construction =====
         private void addSetupNodes(int edgeLength){
@@ -52,26 +68,10 @@ namespace B_Bee_House_Perimeter
                 }
             }
 
-            int width = edgeLength + (edgeLength - 1) * 2;
+            //int width = edgeLength + (edgeLength - 1) * 2;
 
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            foreach (var row in numberingArray)
-            {
-                int spacers = (width - row.Length)/2;
-                for (int i = 0; i < spacers; i++)
-                {
-                    Console.Write("  ");
-                }
-                foreach (var item in row)
-                {
-                    if(item%5 == 0){
-                        Console.Write("⬡ ");
-                    }else{
-                        Console.Write("⬢ ");
-                    }
-                }
-                Console.WriteLine();
-            }
+            // Add all the nodes to the system.
+
         }
     }
 
@@ -81,11 +81,19 @@ namespace B_Bee_House_Perimeter
         // ===== Instance variables =====
         private int number;
         private List<int> edges;
+        private Boolean isEdge;
+        private Boolean isHouse;
 
         // ===== Constructor =====
-        public Node(int number, List<int> edges){
+        public Node(int number, List<int> edges, Boolean isEdge, Boolean isHouse){
             this.number = number;
             this.edges = edges;
+            this.isEdge = isEdge;
+            this.isHouse = isHouse;
+        }
+
+        public Node(int number, List<int> edges, Boolean isEdge){
+            new Node(number, edges, isEdge, false);
         }
 
         // ===== Getter Functions =====
@@ -99,6 +107,14 @@ namespace B_Bee_House_Perimeter
 
         public int[] getEdgesArray(){
             return getEdges().ToArray();
+        }
+
+        public String ToString(){
+            if(isHouse){
+                return "⬢";
+            }else{
+                return "⬡";
+            }
         }
 
         // ===== Setter Functions =====
