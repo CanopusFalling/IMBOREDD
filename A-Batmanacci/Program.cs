@@ -25,14 +25,14 @@ namespace A_Batmanacci
         }
 
         // ===== Find Char in Batmanacci =====
-        // Find a spesific char in a spesific term in the batmanacci sequence.
+        // Find a specific char in a specific term in the batmanacci sequence.
         static char getBatmanacciCharAt(BigInteger startTerm, BigInteger charPos)
         {
             // Get the terms needed from the fibonacci sequence.
             int term = (int)startTerm;
             BigInteger[] fibonacciTerms = fibonacci(term-2);
 
-            // Ajust term so it's now an index.
+            // Adjust term so it's now an index.
             term += -1;
 
             while (term > 1)
@@ -87,7 +87,7 @@ namespace A_Batmanacci
                 sequence.Add(getNextBatmanacci(secondLastTerm, lastTerm));
             }
 
-            // Cut off the start elements that arent needed.
+            // Cut off the start elements that aren't needed.
             sequence.GetRange(start - 1, end - 1);
 
             // Return the resulting sequence.
@@ -109,7 +109,7 @@ namespace A_Batmanacci
             sequence.Add(new BigInteger(1));
             if (n != 1) { sequence.Add(new BigInteger(1)); }
 
-            // Loop untill the nth term is reached.
+            // Loop until the nth term is reached.
             while (n > sequence.Count)
             {
                 int currentTerm = sequence.Count;
