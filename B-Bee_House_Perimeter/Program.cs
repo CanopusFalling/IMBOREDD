@@ -21,6 +21,7 @@ namespace B_Bee_House_Perimeter
             int[] occupiedNodes = getIntegersInput();
 
             HexTessGraph graph = new HexTessGraph(edgeLength);
+            graph.setHouse(occupiedNodes);
             Console.WriteLine(graph);
         }
 
@@ -73,16 +74,28 @@ namespace B_Bee_House_Perimeter
             addSetupNodes(edgeLength);
         }
 
-        // ===== Setter Functions =====
-
         // ===== Getter Functions =====
-        override public String ToString(){
+        override public String ToString()
+        {
             String result = "";
             foreach (var item in nodes)
             {
                 result += item;
             }
             return result;
+        }
+
+        // ===== Setter Functions =====
+        public void setHouse(int[] houseTiles){
+            foreach (Node node in this.nodes)
+            {
+                foreach (int house in houseTiles)
+                {
+                    if(node.getNumber() == house){
+                        node.setHouse(true);
+                    }
+                }
+            }
         }
 
         // ===== Graph Construction =====
@@ -106,11 +119,11 @@ namespace B_Bee_House_Perimeter
                 }
                 if (i < edgeLength - 1)
                 {
-                    rowLength += 2;
+                    rowLength += 1;
                 }
                 else
                 {
-                    rowLength += -2;
+                    rowLength += -1;
                 }
             }
 
@@ -124,7 +137,8 @@ namespace B_Bee_House_Perimeter
                     int selectedNode = numberingArray[i][j];
                     List<int> edges = getNodeNeighbors(numberingArray, i, j);
                     Boolean isEdge = false;
-                    if(edges.Count <= 4){
+                    if (edges.Count <= 4)
+                    {
                         isEdge = true;
                     }
 
@@ -136,54 +150,47 @@ namespace B_Bee_House_Perimeter
 
         private List<int> getNodeNeighbors(int[][] numberingArray, int x, int y)
         {
-            List<int> neighbors = new List<int>();
+            List<int> edges = new List<int>();
 
-            // Check the nodes to either side.
-            int[] nodeRow = numberingArray[x];
-            Console.WriteLine(nodeRow.Length);
-            if (y - 1 >= 0)
-            {
-                neighbors.Add(nodeRow[y-1]);
-            }
-            if (y + 1 < nodeRow.Length)
-            {
-                neighbors.Add(nodeRow[y+1]);
-            }
+            List<int[]> relativeConnections = new List<int[]>();
+            int[] currentRow = numberingArray[x];
 
-            // Check the nodes above.
-            if (x + 1 < numberingArray.Length)
+            // Add the nodes either side.
+            relativeConnections.Add(new int[] { 0, 1 });
+            relativeConnections.Add(new int[] { 0, -1 });
+
+            // Add nodes that are above and below.
+            if (x > 0)
             {
-                int[] aboveNodeRow = numberingArray[x + 1];
-                int modifier = -1;
-                if(aboveNodeRow.Length > nodeRow.Length){modifier = 1;}
-                if (y + modifier >= 0 && y + modifier < numberingArray.Length)
-                {
-                    neighbors.Add(aboveNodeRow[y+modifier]);
-                }
-                if (y < nodeRow.Length)
-                {
-                    neighbors.Add(aboveNodeRow[y]);
-                }
+                int[] belowRow = numberingArray[x - 1];
+                int modifier = 1;
+                if (belowRow.Length < currentRow.Length) { modifier = -1; };
+
+                relativeConnections.Add(new int[] { -1, 0 });
+                relativeConnections.Add(new int[] { -1, modifier });
             }
 
-            // Check the nodes below.
-            if (x - 1 >= 0)
+            if ((x + 1) < numberingArray.Length)
             {
-                int[] belowNodeRow = numberingArray[x - 1];
-                int modifier = -1;
-                if(belowNodeRow.Length > nodeRow.Length){modifier = 1;}
-                if (((y + modifier) >= 0) && ((y + modifier) < belowNodeRow.Length));
-                {
-                    Console.WriteLine(y+modifier + " : " + belowNodeRow.Length + " : " + ((y + modifier) >= 0));
-                    neighbors.Add(belowNodeRow[y+modifier]);
-                }
-                if (y < nodeRow.Length)
-                {
-                    neighbors.Add(belowNodeRow[y]);
-                }
+                int[] aboveRow = numberingArray[x + 1];
+                int modifier = 1;
+                if (aboveRow.Length < currentRow.Length) { modifier = -1; };
+
+                relativeConnections.Add(new int[] { 1, 0 });
+                relativeConnections.Add(new int[] { 1, modifier });
             }
 
-            return neighbors;
+            // Iterate over all the relative positions and add edges were possible.
+            foreach (var item in relativeConnections)
+            {
+                try
+                {
+                    edges.Add(numberingArray[item[0] + x][item[1] + y]);
+                }
+                catch (System.IndexOutOfRangeException) { }
+            }
+
+            return edges;
         }
     }
 
@@ -229,14 +236,16 @@ namespace B_Bee_House_Perimeter
 
         override public String ToString()
         {
-            if (this.isEdge)
+            String result = ""/*getNumber().ToString()*/;
+            if (this.isHouse)
             {
-                return "⬢";
+                result += " ⬢ ";
             }
             else
             {
-                return "⬡";
+                result += " ⬡ ";
             }
+            return result;
         }
 
         // ===== Setter Functions =====
@@ -267,6 +276,10 @@ namespace B_Bee_House_Perimeter
             {
                 return false;
             }
+        }
+
+        public void setHouse(Boolean isHouse){
+            this.isHouse = isHouse;
         }
     }
 }
