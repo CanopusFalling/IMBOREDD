@@ -23,6 +23,17 @@ namespace B_Bee_House_Perimeter
             HexTessGraph graph = new HexTessGraph(edgeLength);
             graph.setHouse(occupiedNodes);
             Console.WriteLine(graph);
+
+            List<int[]> loops = graph.getLoops(6);
+
+            foreach (var loop in loops)
+            {
+                foreach (var nodeID in loop)
+                {
+                    Console.Write(" " + nodeID + " ");
+                }
+                Console.WriteLine();
+            }
         }
 
         // ===== User Input =====
@@ -78,20 +89,122 @@ namespace B_Bee_House_Perimeter
         override public String ToString()
         {
             String result = "";
-            foreach (var item in nodes)
+            int height = (edgeLength * 2) - 1;
+            int currentRowLength = edgeLength;
+            int currentNode = 0;
+            for (int i = 0; i < height; i++)
             {
-                result += item;
+                for (int k = 0; k < (height - currentRowLength); k++)
+                {
+                    result += " ";
+                }
+                for (int j = 0; j < currentRowLength; j++)
+                {
+                    result += this.nodes[currentNode];
+                    currentNode += 1;
+                }
+                if (i < edgeLength - 1)
+                {
+                    currentRowLength += 1;
+                }
+                else
+                {
+                    currentRowLength += -1;
+                }
+                result += "\n";
             }
             return result;
         }
 
+        // Get a list of all the house nodes.
+        public List<Node> getHouseTiles()
+        {
+            List<Node> result = new List<Node>();
+            foreach (var node in this.nodes)
+            {
+                if (node.isHouseTile())
+                {
+                    result.Add(node);
+                }
+            }
+            return result;
+        }
+
+        // Get a list of all the specified nodes.
+        public List<Node> getNodes(List<int> ids, List<Node> space)
+        {
+            List<Node> result = new List<Node>();
+            foreach (Node node in space)
+            {
+                foreach (int id in ids)
+                {
+                    if (node.getNumber() == id)
+                    {
+                        result.Add(node);
+                    }
+                }
+            }
+            return result;
+        }
+
+        // Get all the loops in the graph over a certain length.
+        public List<int[]> getLoops(int minLength)
+        {
+            List<Node> houseTiles = getHouseTiles();
+            List<Node> parents = new List<Node>();
+            parents.Add(houseTiles[0]);
+
+            return dfsLoops(houseTiles, parents, minLength);
+        }
+
+        // DFS on a graph with a list of nodes.
+        private List<int[]> dfsLoops(List<Node> nodes, List<Node> parents, int minLength)
+        {
+            List<int[]> loops = new List<int[]>();
+
+            Node currentNode = parents[parents.Count - 1];
+            List<Node> children = getNodes(currentNode.getEdges(), nodes);
+
+            foreach (Node child in children)
+            {
+                // Check if node has been previously visited.
+                int loopLength = -1;
+                foreach (Node parent in parents)
+                {
+                    if(parent.Equals(child)){
+                        int parentIndex = parents.IndexOf(parent);
+                        loopLength = parents.Count - parentIndex; 
+                    }
+                }
+
+                if(loopLength == -1){
+                    // Recurse if node hasn't been visited.
+                    parents.Add(child);
+                    loops = dfsLoops(nodes, parents, minLength);
+                    parents.Remove(child);
+                }else if(loopLength > 6){
+                    // Add Loop if node has been visited.
+                    int[] loop = new int[loopLength];
+                    for (int i = 0; i < loopLength; i++)
+                    {
+                        loop[i] = parents[parents.Count - loopLength + i].getNumber();
+                    }
+                    loops.Add(loop);
+                }
+            }
+
+            return loops;
+        }
+
         // ===== Setter Functions =====
-        public void setHouse(int[] houseTiles){
+        public void setHouse(int[] houseTiles)
+        {
             foreach (Node node in this.nodes)
             {
                 foreach (int house in houseTiles)
                 {
-                    if(node.getNumber() == house){
+                    if (node.getNumber() == house)
+                    {
                         node.setHouse(true);
                     }
                 }
@@ -239,15 +352,24 @@ namespace B_Bee_House_Perimeter
             String result = ""/*getNumber().ToString()*/;
             if (this.isHouse)
             {
-                result += " ⬢ ";
+                result += "⬢ ";
             }
             else
             {
-                result += " ⬡ ";
+                result += "⬡ ";
             }
             return result;
         }
 
+        public Boolean isHouseTile()
+        {
+            return this.isHouse;
+        }
+
+        public Boolean isEdgeTile()
+        {
+            return this.isEdge;
+        }
         // ===== Setter Functions =====
         // Private
         private void setEdges(List<int> edges)
@@ -278,7 +400,8 @@ namespace B_Bee_House_Perimeter
             }
         }
 
-        public void setHouse(Boolean isHouse){
+        public void setHouse(Boolean isHouse)
+        {
             this.isHouse = isHouse;
         }
     }
