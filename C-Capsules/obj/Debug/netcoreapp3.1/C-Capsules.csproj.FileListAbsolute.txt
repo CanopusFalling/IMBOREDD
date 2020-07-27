@@ -1,0 +1,13 @@
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\bin\Debug\netcoreapp3.1\C-Capsules.exe
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\bin\Debug\netcoreapp3.1\C-Capsules.deps.json
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\bin\Debug\netcoreapp3.1\C-Capsules.runtimeconfig.json
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\bin\Debug\netcoreapp3.1\C-Capsules.runtimeconfig.dev.json
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\bin\Debug\netcoreapp3.1\C-Capsules.dll
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\bin\Debug\netcoreapp3.1\C-Capsules.pdb
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.csprojAssemblyReference.cache
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.csproj.CoreCompileInputs.cache
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.AssemblyInfoInputs.cache
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.AssemblyInfo.cs
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.dll
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.pdb
+C:\Users\kent_\Documents\github\IMBOREDD\C-Capsules\obj\Debug\netcoreapp3.1\C-Capsules.genruntimeconfig.cache
