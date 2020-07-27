@@ -9,22 +9,22 @@ namespace B_Bee_House_Perimeter
         static void Main(string[] args)
         {
             // Set the console to use UTF8 (8-bit unicode.)
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            //Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            // Get the user input for the size of the graph and 
+            // Get the user input for the size of the graph and
             // the number of occupied nodes.
             int[] firstInput = getIntegersInput();
             int edgeLength = firstInput[0];
-            int nodeCount = firstInput[1];
+            //int nodeCount = firstInput[1];
 
             // Get the locations of the occupied nodes.
             int[] occupiedNodes = getIntegersInput();
 
             HexTessGraph graph = new HexTessGraph(edgeLength);
             graph.setHouse(occupiedNodes);
-            Console.WriteLine(graph);
+            //Console.WriteLine(graph);
 
-            int perimeter = (edgeLength - 1) * 6;
+            /*int perimeter = (edgeLength - 1) * 6;
 
             List<int[]> loops = graph.getLoops(6);
 
@@ -32,9 +32,11 @@ namespace B_Bee_House_Perimeter
             foreach (int[] loop in loops)
             {
                 graph.fillLoop(loop);
-            }
+            }*/
 
-            Console.WriteLine(graph + " : " + loops.Count);
+            graph.FillNonConnected();
+
+            //Console.WriteLine(graph);
 
             // Compute the number of borders.
             Console.WriteLine(graph.getBorderCount());
@@ -116,6 +118,89 @@ namespace B_Bee_House_Perimeter
                     currentRowLength += -1;
                 }
                 result += "\n";
+            }
+            return result;
+        }
+
+        // Get all nodes in a 2D list.
+        public List<List<Node>> To2DList()
+        {
+            List<List<Node>> result = new List<List<Node>>();
+            int height = (edgeLength * 2) - 1;
+            int currentRowLength = edgeLength;
+            int currentNode = 0;
+            for (int i = 0; i < height; i++)
+            {
+                result.Add(new List<Node>());
+                for (int j = 0; j < currentRowLength; j++)
+                {
+                    result[i].Add(this.nodes[currentNode]);
+                    currentNode += 1;
+                }
+                if (i < edgeLength - 1)
+                {
+                    currentRowLength += 1;
+                }
+                else
+                {
+                    currentRowLength += -1;
+                }
+            }
+            return result;
+        }
+
+        // Get all non-house nodes connected to the edge of the graph.
+        public List<Node> getEdgeConnectedNodes()
+        {
+            List<Node> edgeTiles = getEdgeTiles();
+            List<Node> edgeConnectedTiles = new List<Node>();
+
+            foreach (Node edge in edgeTiles)
+            {
+                if (!edge.isHouseTile())
+                {
+                    edgeConnectedTiles.Add(edge);
+                }
+            }
+
+            int lastLength = 0;
+
+            while (lastLength != edgeConnectedTiles.Count)
+            {
+                lastLength = edgeConnectedTiles.Count;
+                //Console.WriteLine(lastLength);
+
+                for(int i = 0; i < edgeConnectedTiles.Count; i++)
+                {
+                    List<int> connections = edgeConnectedTiles[i].getEdges();
+                    //Console.WriteLine(connections.Count);
+
+                    foreach (int nodeID in connections)
+                    {
+                        //Console.WriteLine(nodeID-1 + " : " + this.nodes.Count);
+                        Node currentNode = this.nodes[nodeID-1];
+                        if ((!currentNode.isHouseTile()) && (!edgeConnectedTiles.Contains(currentNode)))
+                        {
+                            edgeConnectedTiles.Add(currentNode);
+                        }
+                    }
+                }
+            }
+
+            return edgeConnectedTiles;
+        }
+
+
+        // Get all edge nodes.
+        public List<Node> getEdgeTiles()
+        {
+            List<Node> result = new List<Node>();
+            foreach (var node in this.nodes)
+            {
+                if (node.isEdgeTile())
+                {
+                    result.Add(node);
+                }
             }
             return result;
         }
@@ -291,6 +376,23 @@ namespace B_Bee_House_Perimeter
             }
         }
 
+        public void FillNonConnected(){
+            List<Node> connected = getEdgeConnectedNodes();
+
+            // Set entire graph as part of the house.
+            foreach (Node node in this.nodes)
+            {
+                node.setHouse(true);
+            }
+
+            // Set all the connected edge nodes to not
+            // part of the house.
+            foreach (Node node in connected)
+            {
+                node.setHouse(false);
+            }
+        }
+
         // ===== Graph Construction =====
         private void addSetupNodes(int edgeLength)
         {
@@ -395,7 +497,6 @@ namespace B_Bee_House_Perimeter
         private int number;
         private List<int> edges;
         private Boolean isEdge;
-        private Boolean isCorner;
         private Boolean isHouse;
 
         // ===== Constructor =====
