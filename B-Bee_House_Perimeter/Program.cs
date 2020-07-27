@@ -24,16 +24,20 @@ namespace B_Bee_House_Perimeter
             graph.setHouse(occupiedNodes);
             Console.WriteLine(graph);
 
+            int perimeter = (edgeLength - 1) * 6;
+
             List<int[]> loops = graph.getLoops(6);
 
-            foreach (var loop in loops)
+            // For each loop find any enclosed areas.
+            foreach (int[] loop in loops)
             {
-                foreach (var nodeID in loop)
-                {
-                    Console.Write(" " + nodeID + " ");
-                }
-                Console.WriteLine();
+                graph.fillLoop(loop);
             }
+
+            Console.WriteLine(graph + " : " + loops.Count);
+
+            // Compute the number of borders.
+            Console.WriteLine(graph.getBorderCount());
         }
 
         // ===== User Input =====
@@ -171,18 +175,22 @@ namespace B_Bee_House_Perimeter
                 int loopLength = -1;
                 foreach (Node parent in parents)
                 {
-                    if(parent.Equals(child)){
+                    if (parent.Equals(child))
+                    {
                         int parentIndex = parents.IndexOf(parent);
-                        loopLength = parents.Count - parentIndex; 
+                        loopLength = parents.Count - parentIndex;
                     }
                 }
 
-                if(loopLength == -1){
+                if (loopLength == -1)
+                {
                     // Recurse if node hasn't been visited.
                     parents.Add(child);
                     loops = dfsLoops(nodes, parents, minLength);
                     parents.Remove(child);
-                }else if(loopLength > 6){
+                }
+                else if (loopLength >= minLength)
+                {
                     // Add Loop if node has been visited.
                     int[] loop = new int[loopLength];
                     for (int i = 0; i < loopLength; i++)
@@ -194,6 +202,30 @@ namespace B_Bee_House_Perimeter
             }
 
             return loops;
+        }
+
+        public int getBorderCount()
+        {
+            int count = 0;
+            List<Node> houseTiles = getHouseTiles();
+
+            // Iterate over each tile.
+            foreach (Node tile in houseTiles)
+            {
+                List<int> edges = tile.getEdges();
+                // Add one for each edge that borders the perimiter.
+                count += 6 - edges.Count;
+                // Iterate over all the children.
+                foreach (int edge in edges)
+                {
+                    if (!nodes[edge - 1].isHouseTile())
+                    {
+                        count += 1;
+                    }
+                }
+            }
+
+            return count;
         }
 
         // ===== Setter Functions =====
@@ -208,6 +240,54 @@ namespace B_Bee_House_Perimeter
                         node.setHouse(true);
                     }
                 }
+            }
+        }
+
+        public void fillLoop(int[] loop)
+        {
+            int height = (this.edgeLength * 2) - 1;
+            int currentRowLength = this.edgeLength;
+            int currentNode = 1;
+            for (int i = 0; i < height; i++)
+            {
+                // Check if any 2 of the nodes are on the same line.
+                List<int> nodesOnLine = new List<int>();
+                for (int j = 0; j < currentRowLength; j++)
+                {
+                    foreach (int loopItem in loop)
+                    {
+                        if (currentNode == loopItem)
+                        {
+                            nodesOnLine.Add(loopItem);
+                        }
+                    }
+                    currentNode += 1;
+                }
+
+                // Fill in the line between those nodes.
+                if (nodesOnLine.Count > 1)
+                {
+                    fillLine(nodesOnLine[0], nodesOnLine[nodesOnLine.Count - 1]);
+                }
+
+                if (i < edgeLength - 1)
+                {
+                    currentRowLength += 1;
+                }
+                else
+                {
+                    currentRowLength += -1;
+                }
+            }
+        }
+
+        private void fillLine(int start, int end)
+        {
+            //Console.WriteLine(start + " : " + end);
+            for (int i = start; i < end; i++)
+            {
+                //Console.WriteLine(this.nodes[i].getNumber());
+                this.nodes[i].setHouse(true);
             }
         }
 
@@ -315,6 +395,7 @@ namespace B_Bee_House_Perimeter
         private int number;
         private List<int> edges;
         private Boolean isEdge;
+        private Boolean isCorner;
         private Boolean isHouse;
 
         // ===== Constructor =====
