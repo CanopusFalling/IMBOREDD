@@ -94,7 +94,18 @@ namespace C_Capsules
             this.capsules = capsules.ToArray();
         }
 
+        public CapsuleGrid(int[][] grid, Capsule[] capsules)
+        {
+            this.gridState = grid;
+            this.capsules = capsules;
+        }
+
         // ===== Accessor Functions =====
+        public int[][] getGridState()
+        {
+            return this.gridState;
+        }
+
         override public String ToString()
         {
             String result = "";
@@ -157,15 +168,118 @@ namespace C_Capsules
             return result;
         }
 
-        public int[] findPossibilities(int cell, Capsule capsule){
-            
+        public int[] findPossibilities(int[] cell, Capsule capsule)
+        {
+            int[][] grid = this.gridState;
+            List<int> possibilities = new List<int>();
+            List<int[]> capsuleCells = capsule.getCells();
+
+            for (int i = 0; i < capsuleCells.Count; i++)
+            {
+                possibilities.Add(i + 1);
+            }
+
+            for (int yMod = -1; yMod < 1; yMod++)
+            {
+                for (int xMod = -1; xMod < 1; xMod++)
+                {
+                    if (!(xMod == 0 && yMod == 0))
+                    {
+                        try
+                        {
+                            foreach (int possibility in possibilities)
+                            {
+                                if (grid[cell[0] + yMod][cell[1] + xMod] == possibility)
+                                {
+
+                                }
+                            }
+                        }
+                        catch (System.IndexOutOfRangeException) { }
+                    }
+                }
+            }
+
+            return possibilities.ToArray();
+        }
+
+        public Boolean isSolved(){
+            Boolean result = true;
+            foreach (Capsule capsule in this.capsules)
+            {
+                foreach (int[] currentCell in capsule.getCells())
+                {
+                    if(this.gridState[currentCell[0]-1][currentCell[1]-1] == 0){
+                        result = false;
+                    }
+                }
+            }
+
+            return result;
         }
 
         // ===== Mutator Functions ======
         // Function to solve the grid.
         public void solve()
         {
-            
+            int[][] grid = this.gridState;
+            int[][][] possibleStates = new int[grid.Length][][];
+            for (int i = 0; i < grid.Length; i++)
+            {
+                possibleStates[i] = new int[grid[0].Length][];
+            }
+
+            // Iterate through each capsule.
+            foreach (Capsule capsule in this.capsules)
+            {
+                foreach (int[] currentCell in capsule.getCells())
+                {
+                    if (grid[currentCell[0] - 1][currentCell[1] - 1] == 0)
+                    {
+                        possibleStates[currentCell[0] - 1][currentCell[1] - 1] = findPossibilities(currentCell, capsule);
+                    }else{
+                        possibleStates[currentCell[0] - 1][currentCell[1] - 1] = new int[100];
+                    }
+                }
+            }
+
+            // Chose the cell with the smallest number of possibilities.
+            int[] possibleContents = possibleStates[0][0];
+            int[] cell = new int[] { 0, 0 };
+            foreach (Capsule capsule in this.capsules)
+            {
+                foreach (int[] currentCell in capsule.getCells())
+                {
+                    int[] currentStates = possibleStates[currentCell[0] - 1][currentCell[1] - 1];
+                    if (currentStates.Length < possibleContents.Length)
+                    {
+                        cell = currentCell;
+                        possibleContents = currentStates;
+                    }
+                }
+            }
+
+            // Change the possibility then recurse.
+            foreach (int possibility in possibleContents)
+            {
+                int[][] newGridState = (int[][])this.gridState.Clone();
+
+                newGridState[cell[0]][cell[1]] = possibility;
+
+                CapsuleGrid newGrid = new CapsuleGrid(newGridState, this.capsules);
+
+                if(newGrid.isSolved()){
+                    Console.WriteLine("Break");
+                    break;
+                }
+
+                newGrid.solve();
+                if (newGrid.isGridCorrect())
+                {
+                    this.gridState = newGrid.getGridState();
+                    break;
+                }
+            }
         }
 
         // Function to sort all the capsules by length.
